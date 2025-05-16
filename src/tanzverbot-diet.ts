@@ -38,23 +38,19 @@ export function calcDateOnDiet(
     const servings = foodServings[index] || 0;
     dailyCaloriesOnDiet += calories * servings;
   }
-  let dailyCaloriesBasicMetabolicRate = 0;
-  if (sex == Sex.Male) {
-    dailyCaloriesBasicMetabolicRate = Math.ceil(
-      // Harris-Benedict-Formula (Male)
-      66.47 + 13.7 * currentWeightKg + 5.003 * heightM * 100.0 - 6.75 * ageY,
-    );
-  } else {
-    dailyCaloriesBasicMetabolicRate = Math.ceil(
-      // Harris-Benedict-Formula (Female)
-      655.1 + 9.563 * currentWeightKg + 1.85 * heightM * 100.0 - 4.676 * ageY,
-    );
-  }
-  // TODO: Duplizierte Logik in den Harris-Benedict-Berechnungen, auslagern in eigene Funktion
+  let dailyCaloriesBasicMetabolicRate = calculateBMR(currentWeightKg, heightM, ageY, sex);
   const dailyExcessCalories =
     dailyCaloriesOnDiet - dailyCaloriesBasicMetabolicRate;
   if (dailyExcessCalories <= 0) {
     throw new Error("This diet is not sufficient for you to gain weight.");
   }
   return Math.ceil((9000 * weightGainKg) / dailyExcessCalories);
+}
+
+function calculateBMR(weight: number, height: number, age: number, sex: Sex): number {
+  if (sex === Sex.Male) {
+    return Math.ceil(66.47 + 13.7 * weight + 5.003 * height * 100.0 - 6.75 * age);
+  } else {
+    return Math.ceil(655.1 + 9.563 * weight + 1.85 * height * 100.0 - 4.676 * age);
+  }
 }
