@@ -28,6 +28,7 @@ export function calcDateOnDiet(
   const weightGainKg = targetWeightKg - currentWeightKg;
   if (weightGainKg < 0) {
     throw new Error(`This diet is for gaining weight, not loosing it!`);
+    // TODO: Rechtschreibfehler
   }
   if (ageY < 16 || heightM < 1.5) {
     throw new Error(`You do not qualify for this kind of diet.`);
@@ -50,6 +51,7 @@ export function calcDateOnDiet(
       655.1 + 9.563 * currentWeightKg + 1.85 * heightM * 100.0 - 4.676 * ageY,
     );
   }
+  // TODO: Duplizierte Logik in den Harris-Benedict-Berechnungen, auslagern in eigene Funktion
   const dailyExcessCalories =
     dailyCaloriesOnDiet - dailyCaloriesBasicMetabolicRate;
   if (dailyExcessCalories <= 0) {
